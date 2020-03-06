@@ -741,12 +741,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-      activeUrl = url;
-      dispatchEvent(
-        view,
-        new TopShouldStartLoadWithRequestEvent(
-          view.getId(),
-          createWebViewEvent(view, url)));
+      this.emitTopShouldStartLoadWithRequestEvent(view, url, true)
       return true;
     }
 
@@ -755,7 +750,8 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
       final String url = request.getUrl().toString();
-      return this.shouldOverrideUrlLoading(view, url);
+      this.emitTopShouldStartLoadWithRequestEvent(view, url, request.isForMainFrame())
+      return true;
     }
 
     @Override
@@ -797,6 +793,17 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
           webView,
           new TopHttpErrorEvent(webView.getId(), eventData));
       }
+    }
+
+    protected void emitTopShouldStartLoadWithRequestEvent(WebView webView, String url, Boolean isMainFrame) {
+      activeUrl = url;
+      WritableMap event = createWebViewEvent(view, url);
+      event.putBoolean("isMainFrame", isMainFrame);
+      dispatchEvent(
+        view,
+        new TopShouldStartLoadWithRequestEvent(
+          view.getId(),
+          event));
     }
 
     protected void emitFinishEvent(WebView webView, String url) {

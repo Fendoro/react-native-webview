@@ -1013,7 +1013,8 @@ static NSDictionary* customCertificatesForHost;
     [event addEntriesFromDictionary: @{
       @"url": (request.URL).absoluteString,
       @"mainDocumentURL": (request.mainDocumentURL).absoluteString,
-      @"navigationType": navigationTypes[@(navigationType)]
+      @"navigationType": navigationTypes[@(navigationType)],
+      @"isMainFrame": @(navigationAction.targetFrame.isMainFrame)
     }];
     if (![self.delegate webView:self
       shouldStartLoadForRequest:event

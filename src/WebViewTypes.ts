@@ -102,6 +102,7 @@ export interface WebViewNavigation extends WebViewNativeEvent {
     | 'formresubmit'
     | 'other';
   mainDocumentURL?: string;
+  isMainFrame: boolean;
 }
 
 export type DecelerationRateConstant = 'normal' | 'fast';
